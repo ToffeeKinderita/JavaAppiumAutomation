@@ -39,6 +39,40 @@ public class FirstTest {
     public void tearDown() {
         driver.quit();
     }
+    
+    @Test
+    public void assertTitleTest() {
+        By find_wiki_locator = By.xpath("//*[contains(@text,'Search Wikipedia')]");
+        By find_search_locator = By.xpath("//*[contains(@text,'Search…')]");
+        String valueForSearch = "Appium";
+        By find_article_after_search = By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='Appium']");
+        By find_article_title = By.id("org.wikipedia:id/view_page_title_texto");
+
+        waitForElementAndClick(
+                find_wiki_locator,
+                "cannot find 'Search Wikipedia' input",
+                5
+        );
+
+        waitForElementAndSendKeys(
+                find_search_locator,
+                valueForSearch,
+                "Cannot find 'Search…' input",
+                5
+        );
+
+        waitForElementAndClick(
+                find_article_after_search,
+                "cannot find 'Appium' input",
+                10
+        );
+
+        Assert.assertTrue(waitForElementPresent(
+                find_article_title,
+                "There is no title on the page",
+                0)
+                .isDisplayed());
+    }
 
     @Test
     public void checkForSearchPlaceholerTest() {
@@ -196,9 +230,9 @@ public class FirstTest {
                 "Cannot find navigation button to My lists",
                 5
         );
-         waitForElementAndClick(
+        waitForElementAndClick(
                 //By.xpath("//*[@text='Learning programming']"),
-                 By.id("org.wikipedia:id/item_title"),
+                By.id("org.wikipedia:id/item_title"),
                 "Cannot find created folder",
                 5
         );
@@ -243,7 +277,7 @@ public class FirstTest {
     }
 
     @Test
-    public void testAmountOfEmptySearch(){
+    public void testAmountOfEmptySearch() {
         String search_param = "rggdsvdr";
         String search_results_locator = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']";
         String empty_result_label = "//*[@text='No results found']";
@@ -260,19 +294,19 @@ public class FirstTest {
         );
         waitForElementPresent(
                 By.xpath(empty_result_label),
-                "cannot find "+empty_result_label,
+                "cannot find " + empty_result_label,
                 5
         );
 
         assertElementNotPresent(
-              By.xpath(search_results_locator),
-              "There are search results found"
+                By.xpath(search_results_locator),
+                "There are search results found"
         );
 
     }
-    
+
     @Test
-    public void rotationTest(){
+    public void rotationTest() {
         String search_param = "Java";
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -304,7 +338,7 @@ public class FirstTest {
                 "title after rotation is absent",
                 15
         );
-        Assert.assertEquals("Article title has been changed", title_before_rotation,title_after_rotation);
+        Assert.assertEquals("Article title has been changed", title_before_rotation, title_after_rotation);
         driver.rotate(ScreenOrientation.PORTRAIT);
         String title_after_second_rotation = waitForElementAndGetAttribute(
                 By.id("org.wikipedia:id/view_page_title_text"),
@@ -312,11 +346,11 @@ public class FirstTest {
                 "title after rotation is absent",
                 15
         );
-        Assert.assertEquals("Article title has been changed", title_before_rotation,title_after_second_rotation);
+        Assert.assertEquals("Article title has been changed", title_before_rotation, title_after_second_rotation);
     }
 
     @Test
-    public void moveToBackgroundTest(){
+    public void moveToBackgroundTest() {
         String search_param = "Java";
         waitForElementAndClick(
                 By.xpath("//*[contains(@text,'Search Wikipedia')]"),
@@ -347,6 +381,7 @@ public class FirstTest {
         wait.withMessage(error_message + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
+
 
     private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
@@ -413,21 +448,21 @@ public class FirstTest {
                 .release().perform();
     }
 
-    private int getAmountOfElements(By by){
+    private int getAmountOfElements(By by) {
         List elements = driver.findElements(by);
         return elements.size();
     }
 
-    private void assertElementNotPresent(By by, String error_message){
+    private void assertElementNotPresent(By by, String error_message) {
         int amount_of_elements = getAmountOfElements(by);
-        if(amount_of_elements >0) {
+        if (amount_of_elements > 0) {
             String default_message = "An element " + by.toString() + " supposed to be not present";
-            throw new AssertionError(default_message+ " " + error_message);
+            throw new AssertionError(default_message + " " + error_message);
         }
     }
 
-    private String waitForElementAndGetAttribute(By by, String attribute, String error_message, long timeoutInSeconds){
-        WebElement element = waitForElementPresent(by, error_message,timeoutInSeconds);
+    private String waitForElementAndGetAttribute(By by, String attribute, String error_message, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         return element.getAttribute(attribute);
     }
 }
