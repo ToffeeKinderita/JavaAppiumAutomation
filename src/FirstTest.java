@@ -39,7 +39,149 @@ public class FirstTest {
     public void tearDown() {
         driver.quit();
     }
-    
+
+    @Test
+    public void saveTwoArticlesTest() {
+        int shortTimeoutInSec = 5;
+        int middleTimeoutInSec = 10;
+        int longTimeoutInSec = 15;
+        By find_wiki_locator = By.xpath("//*[contains(@text,'Search Wikipedia')]");
+        By find_search_locator = By.xpath("//*[contains(@text,'Search…')]");
+        String valueForSearchOne = "Appium";
+        String valueForSearchTwo = "Java";
+        String name_of_folder = "Tamara";
+        By find_article_after_searchOne = By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_title'][@text='Appium']");
+        By find_article_after_searchTwo = By.xpath("//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='Object-oriented programming language']");
+        By more_options_locator = By.xpath("//android.widget.ImageView[@content-desc='More options']");
+        By add_to_reading_list_locator = By.xpath("//*[@text='Add to reading list']");
+        By onboarding_button = By.id("org.wikipedia:id/onboarding_button");
+        By text_input = By.id("org.wikipedia:id/text_input");
+        By ok_button_on_onboarding = By.xpath("//*[@text='OK']");
+        By close_article_button = By.xpath("//android.widget.ImageButton[@content-desc='Navigate up']");
+        By findArticleInMyLists = By.xpath("//*[@text='Java (programming language)']");
+        By findCreatedFolderInMyLists = By.id("org.wikipedia:id/item_title");
+        By findMyListsButton = By.xpath("//android.widget.FrameLayout[@content-desc='My lists']");
+        By findClickOnCreatedFolderImMyLists = By.xpath("//android.widget.TextView[@text='" + name_of_folder + "']");
+
+                waitForElementAndClick(
+                        find_wiki_locator,
+                        "cannot find 'Search Wikipedia' input",
+                        shortTimeoutInSec
+                );
+
+        waitForElementAndSendKeys(
+                find_search_locator,
+                valueForSearchTwo,
+                "cannot find 'Search…' input",
+                shortTimeoutInSec
+        );
+
+        waitForElementAndClick(
+                find_article_after_searchTwo,
+                "cannot find 'Object-oriented programming language' input",
+                shortTimeoutInSec
+        );
+        waitForElementAndClick(
+                more_options_locator,
+                "Cannot find button to open article options",
+                middleTimeoutInSec
+        );
+
+        waitForElementAndClick(
+                add_to_reading_list_locator,
+                "Cannot find option to add article to add to list",
+                shortTimeoutInSec
+        );
+        waitForElementAndClick(
+                onboarding_button,
+                "Cannot find button Got it",
+                shortTimeoutInSec
+        );
+        waitForElementAndClear(
+                text_input,
+                "Cannot find input to set name of articles folder ",
+                shortTimeoutInSec
+        );
+        waitForElementAndSendKeys(
+                text_input,
+                name_of_folder,
+                "Cannot put text into articles folder input",
+                shortTimeoutInSec
+        );
+        waitForElementAndClick(
+                ok_button_on_onboarding,
+                "Cannot click on OK",
+                shortTimeoutInSec
+        );
+        waitForElementAndClick(
+                close_article_button,
+                "Cannot close the article. Cannot X button to navigate up",
+                shortTimeoutInSec
+        );
+        waitForElementAndClick(
+                find_wiki_locator,
+                "cannot find 'Search Wikipedia' input",
+                shortTimeoutInSec
+        );
+
+        waitForElementAndSendKeys(
+                find_search_locator,
+                valueForSearchOne,
+                "cannot find 'Search…' input",
+                shortTimeoutInSec
+        );
+
+        waitForElementAndClick(
+                find_article_after_searchOne,
+                "cannot find 'Object-oriented programming language' input",
+                middleTimeoutInSec
+        );
+        waitForElementAndClick(
+                more_options_locator,
+                "Cannot find button to open article options",
+                middleTimeoutInSec
+        );
+
+        waitForElementAndClick(
+                add_to_reading_list_locator,
+                "Cannot find option to add article to add to list",
+                middleTimeoutInSec
+        );
+
+        waitForElementAndClick(
+                findClickOnCreatedFolderImMyLists,
+                "Cannot find already created folder in My lists.",
+                middleTimeoutInSec
+        );
+
+        waitForElementAndClick(
+                close_article_button,
+                "Cannot close the article. Cannot X button to navigate up",
+                shortTimeoutInSec
+        );
+
+        waitForElementAndClick(
+                findMyListsButton,
+                "Cannot find navigation button to My lists",
+                shortTimeoutInSec
+        );
+
+        waitForElementAndClick(
+                findCreatedFolderInMyLists,
+                "Cannot find created folder",
+                shortTimeoutInSec
+        );
+
+        swipeElementToLeft(
+                findArticleInMyLists,
+                "Cannot find saved article"
+        );
+
+        WebElement leftArticle = driver.findElement(By.xpath("//*[@text='Appium']"));
+        Assert.assertTrue("There is no Appium article", leftArticle.isDisplayed());
+
+    }
+
     @Test
     public void assertTitleTest() {
         By find_wiki_locator = By.xpath("//*[contains(@text,'Search Wikipedia')]");
@@ -240,11 +382,6 @@ public class FirstTest {
                 By.xpath("//*[@text='Java (programming language)']"),
                 "Cannot find saved article"
         );
-        waitForElementNotPresent(
-                By.xpath("//*[@text='Java (programming language)']"),
-                "Cannot delete saved article",
-                5
-        );
     }
 
     @Test
@@ -381,8 +518,7 @@ public class FirstTest {
         wait.withMessage(error_message + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
     }
-
-
+    
     private WebElement waitForElementAndClick(By by, String error_message, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, error_message, timeoutInSeconds);
         element.click();
