@@ -1,8 +1,11 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 public class SearchPageObject extends MainPageObject {
 
@@ -14,7 +17,9 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULTS_LOCATOR = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']",
             EMPTY_RESULT_LABEL = "//*[@text='No results found']",
-            EMPTY_PAGE = "//*[@resource-id='org.wikipedia:id/search_empty_container']";
+            EMPTY_PAGE = "//*[@resource-id='org.wikipedia:id/search_empty_container']",
+            SEARCH_RESULTS = "org.wikipedia:id/page_list_item_title";
+    ;
 
     public SearchPageObject(AppiumDriver driver) {
         super(driver);
@@ -89,5 +94,14 @@ public class SearchPageObject extends MainPageObject {
     public void waitForElementByTitleAndDescription(String title, String description) {
         String search_result_xpath = getResultSearchElementByTwoOptions(title, description);
         this.waitForElementPresent(By.xpath(search_result_xpath), "Title " + title + " or description " + description + " doesn't match " + search_result_xpath, 10);
+    }
+
+
+    public void assertSearchResultsContainSearchParameter(String search_param) {
+        List searchElements = driver.findElements(By.id(SEARCH_RESULTS));
+        for (Object el : searchElements) {
+            el = this.waitForElementAndGetAttribute(By.id(SEARCH_RESULTS), "text", "Element wasn't found " + SEARCH_RESULTS, 10);
+            Assert.assertTrue("Search results contain invalid value: expected - " + search_param + ", actual: " + el, ((String) el).contains(search_param));
+        }
     }
 }

@@ -62,4 +62,13 @@ public class SearchTests extends CoreTestCase {
         searchPageObject.typeSearchLine("London");
         searchPageObject.waitForElementByTitleAndDescription("London", "Capital and largest city of the United Kingdom");
     }
+
+    @Test
+    public void testExFour() {
+        String search_param = "London";
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine(search_param);
+        searchPageObject.assertSearchResultsContainSearchParameter(search_param);
+    }
 }
