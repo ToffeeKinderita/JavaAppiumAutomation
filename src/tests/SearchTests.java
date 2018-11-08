@@ -54,4 +54,12 @@ public class SearchTests extends CoreTestCase {
         WebElement emptyScreen = searchPageObject.showEmptySearchPage();
         assertTrue(emptyScreen.isDisplayed());
     }
+
+    @Test
+    public void testSearchResultsByTitleAndDescription() {
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("London");
+        searchPageObject.waitForElementByTitleAndDescription("London", "Capital and largest city of the United Kingdom");
+    }
 }

@@ -9,12 +9,12 @@ public class SearchPageObject extends MainPageObject {
     private static final String
             SEARCH_INIT_ELEMENT = "//*[contains(@text,'Search Wikipedia')]",
             SEARCH_INPUT = "//*[contains(@text,'Search…')]",
+            SEARCH_RESULTS_BY_TITLE_AND_SUBSTRING_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{TITLE}']|//*[@text='{DESCRIPTION}']",
             SEARCH_RESULT_By_SUBSTRING_TPL = "//*[@resource-id='org.wikipedia:id/page_list_item_container']//*[@text='{SUBSTRING}']",
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULTS_LOCATOR = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@resource-id='org.wikipedia:id/page_list_item_container']",
             EMPTY_RESULT_LABEL = "//*[@text='No results found']",
             EMPTY_PAGE = "//*[@resource-id='org.wikipedia:id/search_empty_container']";
-
 
     public SearchPageObject(AppiumDriver driver) {
         super(driver);
@@ -23,6 +23,10 @@ public class SearchPageObject extends MainPageObject {
     // TEMPLATE METHODS
     private static String getResultSearchElement(String substring) {
         return SEARCH_RESULT_By_SUBSTRING_TPL.replace("{SUBSTRING}", substring);
+    }
+
+    private static String getResultSearchElementByTwoOptions(String title, String description) {
+        return SEARCH_RESULTS_BY_TITLE_AND_SUBSTRING_TPL.replace("{DESCRIPTION}", description).replace("{TITLE}", title);
     }
     // TEMPLATE METHODS
 
@@ -80,5 +84,10 @@ public class SearchPageObject extends MainPageObject {
 
     public WebElement showEmptySearchPage() {
         return this.waitForElementPresent(By.xpath(EMPTY_PAGE), "Search results weren't cleared", 5);
+    }
+
+    public void waitForElementByTitleAndDescription(String title, String description) {
+        String search_result_xpath = getResultSearchElementByTwoOptions(title, description);
+        this.waitForElementPresent(By.xpath(search_result_xpath), "Title " + title + " or description " + description + " doesn't match " + search_result_xpath, 10);
     }
 }
