@@ -105,4 +105,7 @@ public class ArticlePageObject extends MainPageObject {
         );
     }
 
+    public void assertTitleIsPresent() {
+        this.waitForElementAndGetAttribute(By.id(TITLE), "text", "There is no title found", 0);
+    }
 }
