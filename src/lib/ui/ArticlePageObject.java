@@ -1,20 +1,20 @@
 package lib.ui;
 
 import io.appium.java_client.AppiumDriver;
+import lib.Platform;
 import org.openqa.selenium.WebElement;
 
-public class ArticlePageObject extends MainPageObject {
+abstract public class ArticlePageObject extends MainPageObject {
 
-    private static final String
-            TITLE = "id:org.wikipedia:id/view_page_title_text",
-            FOOTER_ELEMENT = "xpath://*[@resource-id='org.wikipedia:id/page_external_link']//*[@text='View page in browser1']",
-            OPTIONS_BUTTON = "xpath://android.widget.ImageView[@content-desc='More options']",
-            OPTIONS_ADD_TO_MY_LIST_BUTTON = "xpath://*[@text='Add to reading list']",
-            ADD_TO_MY_LIST_OVERLAY = "id:org.wikipedia:id/onboarding_button",
-            MY_LIST_NAME_INPUT = "id:org.wikipedia:id/text_input",
-            MY_LIST_OK_BUTTON = "xpath://*[@text='OK']",
-            CLOSE_ARTICLE_BUTTON = "xpath://android.widget.ImageButton[@content-desc='Navigate up']";
-
+    protected static String
+            TITLE,
+            FOOTER_ELEMENT,
+            OPTIONS_BUTTON,
+            OPTIONS_ADD_TO_MY_LIST_BUTTON,
+            ADD_TO_MY_LIST_OVERLAY,
+            MY_LIST_NAME_INPUT,
+            MY_LIST_OK_BUTTON,
+            CLOSE_ARTICLE_BUTTON;
 
     public ArticlePageObject(AppiumDriver driver) {
         super(driver);
@@ -26,15 +26,27 @@ public class ArticlePageObject extends MainPageObject {
 
     public String getArticleTitle() {
         WebElement title_element = waitForTitleElement();
-        return title_element.getAttribute("text");
+        if (Platform.getInstance().isAndroid()) {
+            return title_element.getAttribute("text");
+        } else {
+            return title_element.getAttribute("name");
+        }
     }
 
     public void swipeToFooter() {
-        this.swipeUpTillFindElement(
-                FOOTER_ELEMENT,
-                "Cannot find the end of article",
-                20
-        );
+        if (Platform.getInstance().isAndroid()) {
+            this.swipeUpTillFindElement(
+                    FOOTER_ELEMENT,
+                    "Cannot find the end of article",
+                    40
+            );
+        } else {
+            this.swipeUpTillTheElementAppear(
+                    FOOTER_ELEMENT,
+                    "Cannot find the end of article",
+                    40);
+        }
+
     }
 
     public void addArticleToMyList(String name_of_folder) {
@@ -106,5 +118,12 @@ public class ArticlePageObject extends MainPageObject {
 
     public void assertTitleIsPresent() {
         this.waitForElementAndGetAttribute(TITLE, "text", "There is no title found", 0);
+    }
+
+    public void addArticlesToMySaved() {
+        this.waitForElementAndClick(
+                OPTIONS_ADD_TO_MY_LIST_BUTTON,
+                "Cannot find option to add article to reading list",
+                5);
     }
 }

@@ -2,6 +2,7 @@ package tests;
 
 import lib.CoreTestCase;
 import lib.ui.SearchPageObject;
+import lib.ui.factory.SearchPageObjectFactory;
 import org.junit.Test;
 import org.openqa.selenium.WebElement;
 
@@ -10,7 +11,7 @@ public class SearchTests extends CoreTestCase {
     @Test
     public void testAmountOfSearchResults() {
         String search_line = "Linkin Park Discography";
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);;
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(search_line);
         int amount_of_search_results = searchPageObject.getAmountOfFoundArticles();
@@ -20,7 +21,7 @@ public class SearchTests extends CoreTestCase {
     @Test
     public void testAmountOfEmptySearch() {
         String search_line = "rggdsvdr";
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);;
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(search_line);
         searchPageObject.waitForEmptyResultsLabel();
@@ -29,7 +30,7 @@ public class SearchTests extends CoreTestCase {
 
     @Test
     public void testCancelSearch() {
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);;
         searchPageObject.initSearchInput();
         searchPageObject.waitForCancelButtonToAppear();
         searchPageObject.clickCancelButton();
@@ -38,7 +39,7 @@ public class SearchTests extends CoreTestCase {
 
     @Test
     public void testSearchPlaceholer() {
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);;
         searchPageObject.initSearchInput();
         WebElement placeholder = searchPageObject.findSearchLine();
         assertTrue(placeholder.isDisplayed());
@@ -46,7 +47,7 @@ public class SearchTests extends CoreTestCase {
 
     @Test
     public void testClearSearchResults() {
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);;
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("Java");
         searchPageObject.waitForSearchResult("Object-oriented programming language");
@@ -57,7 +58,7 @@ public class SearchTests extends CoreTestCase {
 
     @Test
     public void testSearchResultsByTitleAndDescription() {
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);;
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("London");
         searchPageObject.waitForElementByTitleAndDescription("London", "Capital and largest city of the United Kingdom");
@@ -66,7 +67,7 @@ public class SearchTests extends CoreTestCase {
     @Test
     public void testExFour() {
         String search_param = "London";
-        SearchPageObject searchPageObject = new SearchPageObject(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);;
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine(search_param);
         searchPageObject.assertSearchResultsContainSearchParameter(search_param);
